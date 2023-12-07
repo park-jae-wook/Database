@@ -72,3 +72,58 @@ group by department_id
 order by department_id;
 
 -- (3) having절 - 그룹에 대한 조건문
+-- [문법] select 컬럼명1, 그룹함수(컬럼)
+--       from 테이블명
+--      [where 조건문]     --> 행 제한 조건문 작성
+--      [group by 조건문]     
+--      [having 조건문]    --> 행그룹 제한 조건문 작성(그룹함수가 포함된 조건문)
+--      [order by 컬럼명]
+
+select job_id, sum(salary) payroll
+from employees
+where job_id not like '%rep%'
+group by job_id
+having sum(salary) > 13000
+order by sum(salary);
+
+-- 1.
+select round(avg(ifnull(commission_pct,0)),2) as avg_comm
+from employees;
+
+-- 2. 
+select job_id, max(salary) as Maximum, min(salary) as Minimum, 
+sum(salary) as Sum, avg(salary) as Average
+from employees 
+group by job_id;
+
+-- 3.
+select job_id, count(*)
+from employees
+group by job_id;
+
+-- 4. 
+select manager_id, min(salary)
+from employees
+where manager_id is not null
+group by manager_id
+having min(salary) > 6000
+order by manager_id desc;
+
+-- 5.
+select max(salary) - min(salary)  difference
+from employees;
+
+-- 6.
+select count(*) total,count(if(year(hire_date)=1995, 1, null)) "1995",
+                      count(if(year(hire_date)=1996, 1, null)) "1996",
+                      count(if(year(hire_date)=1997, 1, null)) "1997",
+					  count(if(year(hire_date)=1998, 1, null)) "1998"
+from employees;
+-- (==)
+select count(*) total,sum(if(year(hire_date)=1995, 1, 0)) "1995",
+                      sum(if(year(hire_date)=1996, 1, 0)) "1996",
+                      sum(if(year(hire_date)=1997, 1, 0)) "1997",
+					  sum(if(year(hire_date)=1998, 1, 0)) "1998"
+from employees;
+
+
